@@ -1,0 +1,69 @@
+name: Deploy Infrastructure
+# description: Creates a static website hosted in S3 
+# author: https://github.com/Migas99
+
+on:
+  workflow_call:
+    inputs:
+      AWS_REGION:
+        description: ""
+        type: string
+        required: false
+        default: eu-west-1
+      ENVIRONMENT:
+        description: ""
+        type: string
+        required: false
+        default: development
+      SERVICE_NAME:
+        description: ""
+        type: string
+        required: true
+      TERRAFORM_STATE_FILE_NAME:
+        description: ""
+        type: string
+        required: false
+        default: state
+      SUBDOMAIN:
+        description: ""
+        type: string
+        required: false
+        default: ""
+      DOMAIN:
+        description: ""
+        type: string
+        required: true
+
+env:
+  INFRASTRUCTURE_DIRECTORY: "./src"
+  AWS_REGION: ${{ inputs.AWS_REGION }}
+  ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+  SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
+  TERRAFORM_STATE_FILE_NAME: ${{ inputs.TERRAFORM_STATE_FILE_NAME }}
+  SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
+  DOMAIN: ${{ inputs.DOMAIN }}
+
+jobs:
+  deploy:
+    name: Deploy Terraform
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Install Terraform CDK
+        run: npm install --global cdktf-cli@0.12.2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:  ${{ env.AWS_REGION }}
+
+      - name: Deploy with Terraform CDK
+        working-directory: ${{ env.INFRASTRUCTURE_DIRECTORY }}
+        run: cdktf deploy website-stack --auto-approve
