@@ -1,6 +1,4 @@
 name: Deploy Infrastructure
-# description: Creates a static website hosted in S3 
-# author: https://github.com/Migas99
 
 on:
   workflow_call:
@@ -19,11 +17,6 @@ on:
         description: ""
         type: string
         required: true
-      TERRAFORM_STATE_FILE_NAME:
-        description: ""
-        type: string
-        required: false
-        default: state
       SUBDOMAIN:
         description: ""
         type: string
@@ -39,7 +32,6 @@ env:
   AWS_REGION: ${{ inputs.AWS_REGION }}
   ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
   SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
-  TERRAFORM_STATE_FILE_NAME: ${{ inputs.TERRAFORM_STATE_FILE_NAME }}
   SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
   DOMAIN: ${{ inputs.DOMAIN }}
 
