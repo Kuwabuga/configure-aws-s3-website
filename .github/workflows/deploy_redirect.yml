@@ -35,7 +35,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Terraform
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -62,4 +62,4 @@ jobs:
           SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
           DOMAIN: ${{ inputs.DOMAIN }}
           REDIRECT: ${{ inputs.REDIRECT }}
-        run: cdktf deploy website-redirect-stack --auto-approve
+        run: cdktf deploy --auto-approve website-redirect-stack
