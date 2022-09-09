@@ -1,0 +1,203 @@
+{
+  "//": {
+    "metadata": {
+      "backend": "s3",
+      "stackName": "website-stack",
+      "version": "0.12.2"
+    },
+    "outputs": {
+    }
+  },
+  "data": {
+    "aws_acm_certificate": {
+      "undefined-hosted-zone-certificate": {
+        "//": {
+          "metadata": {
+            "path": "website-stack/undefined-hosted-zone-certificate",
+            "uniqueId": "undefined-hosted-zone-certificate"
+          }
+        },
+        "provider": "aws.us-east-1",
+        "types": [
+          "AMAZON_ISSUED"
+        ]
+      }
+    },
+    "aws_route53_zone": {
+      "undefined-data-hosted-zone": {
+        "//": {
+          "metadata": {
+            "path": "website-stack/undefined-data-hosted-zone",
+            "uniqueId": "undefined-data-hosted-zone"
+          }
+        }
+      }
+    }
+  },
+  "provider": {
+    "aws": [
+      {
+        "alias": "eu-west-1",
+        "region": "eu-west-1"
+      },
+      {
+        "alias": "us-east-1",
+        "region": "us-east-1"
+      }
+    ]
+  },
+  "resource": {
+    "aws_cloudfront_distribution": {
+      "website-undefinedundefined-cloudfront-distribution": {
+        "//": {
+          "metadata": {
+            "path": "website-stack/website-undefined.undefined-cloudfront-distribution",
+            "uniqueId": "website-undefinedundefined-cloudfront-distribution"
+          }
+        },
+        "aliases": [
+          "undefined.undefined"
+        ],
+        "comment": "Managed by Terraform CDK",
+        "custom_error_response": [
+          {
+            "error_code": 403,
+            "response_code": 200,
+            "response_page_path": "/"
+          },
+          {
+            "error_code": 404,
+            "response_code": 200,
+            "response_page_path": "/"
+          }
+        ],
+        "default_cache_behavior": {
+          "allowed_methods": [
+            "GET",
+            "HEAD"
+          ],
+          "cached_methods": [
+            "GET",
+            "HEAD"
+          ],
+          "default_ttl": 2592000,
+          "forwarded_values": {
+            "cookies": {
+              "forward": "all"
+            },
+            "query_string": true
+          },
+          "max_ttl": 31536000,
+          "min_ttl": 0,
+          "target_origin_id": "${aws_s3_bucket.undefinedundefined-bucket.id}",
+          "viewer_protocol_policy": "redirect-to-https"
+        },
+        "default_root_object": "index.html",
+        "enabled": true,
+        "is_ipv6_enabled": true,
+        "origin": [
+          {
+            "domain_name": "${aws_s3_bucket.undefinedundefined-bucket.bucket_regional_domain_name}",
+            "origin_id": "${aws_s3_bucket.undefinedundefined-bucket.id}",
+            "s3_origin_config": {
+              "origin_access_identity": "${aws_cloudfront_origin_access_identity.undefinedundefined-oai.cloudfront_access_identity_path}"
+            }
+          }
+        ],
+        "price_class": "PriceClass_100",
+        "restrictions": {
+          "geo_restriction": {
+            "restriction_type": "none"
+          }
+        },
+        "viewer_certificate": {
+          "acm_certificate_arn": "${data.aws_acm_certificate.undefined-hosted-zone-certificate.arn}",
+          "ssl_support_method": "sni-only"
+        }
+      }
+    },
+    "aws_cloudfront_origin_access_identity": {
+      "undefinedundefined-oai": {
+        "//": {
+          "metadata": {
+            "path": "website-stack/undefined.undefined-oai",
+            "uniqueId": "undefinedundefined-oai"
+          }
+        },
+        "comment": "undefined.undefined"
+      }
+    },
+    "aws_route53_record": {
+      "undefined-route53-record": {
+        "//": {
+          "metadata": {
+            "path": "website-stack/undefined-route53-record",
+            "uniqueId": "undefined-route53-record"
+          }
+        },
+        "alias": [
+          {
+            "evaluate_target_health": false,
+            "name": "${aws_cloudfront_distribution.website-undefinedundefined-cloudfront-distribution.domain_name}",
+            "zone_id": "${aws_cloudfront_distribution.website-undefinedundefined-cloudfront-distribution.hosted_zone_id}"
+          }
+        ],
+        "type": "A",
+        "zone_id": "${data.aws_route53_zone.undefined-data-hosted-zone.id}"
+      }
+    },
+    "aws_s3_bucket": {
+      "undefinedundefined-bucket": {
+        "//": {
+          "metadata": {
+            "path": "website-stack/undefined.undefined-bucket",
+            "uniqueId": "undefinedundefined-bucket"
+          }
+        },
+        "bucket": "undefined.undefined"
+      }
+    },
+    "aws_s3_bucket_policy": {
+      "undefinedundefined-set-bucket-policy": {
+        "//": {
+          "metadata": {
+            "path": "website-stack/undefined.undefined-set-bucket-policy",
+            "uniqueId": "undefinedundefined-set-bucket-policy"
+          }
+        },
+        "bucket": "${aws_s3_bucket.undefinedundefined-bucket.id}",
+        "policy": "{\"Version\":\"2012-10-17\",\"Id\":\"undefined.undefined-bucket-policy\",\"Statement\":[{\"Sid\":\"CloudfrontGetObject\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"${aws_cloudfront_origin_access_identity.undefinedundefined-oai.iam_arn}\"},\"Action\":[\"s3:GetObject\"],\"Resource\":[\"${aws_s3_bucket.undefinedundefined-bucket.arn}/*\",\"${aws_s3_bucket.undefinedundefined-bucket.arn}\"]}]}"
+      }
+    },
+    "aws_s3_bucket_public_access_block": {
+      "undefinedundefined-block-public-access": {
+        "//": {
+          "metadata": {
+            "path": "website-stack/undefined.undefined-block-public-access",
+            "uniqueId": "undefinedundefined-block-public-access"
+          }
+        },
+        "block_public_acls": true,
+        "block_public_policy": true,
+        "bucket": "${aws_s3_bucket.undefinedundefined-bucket.id}",
+        "ignore_public_acls": true,
+        "restrict_public_buckets": true
+      }
+    }
+  },
+  "terraform": {
+    "backend": {
+      "s3": {
+        "acl": "bucket-owner-full-control",
+        "key": "undefined/undefined/s3-website.tf",
+        "region": "eu-west-1"
+      }
+    },
+    "required_providers": {
+      "aws": {
+        "source": "aws",
+        "version": "4.29.0"
+      }
+    }
+  }
+}

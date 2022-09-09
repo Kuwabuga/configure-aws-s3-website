@@ -1,0 +1,21 @@
+{
+  "version": "0.12.2",
+  "stacks": {
+    "website-stack": {
+      "name": "website-stack",
+      "constructPath": "website-stack",
+      "workingDirectory": "stacks\\website-stack",
+      "synthesizedStackPath": "stacks\\website-stack\\cdk.tf.json",
+      "annotations": [],
+      "dependencies": []
+    },
+    "website-redirect-stack": {
+      "name": "website-redirect-stack",
+      "constructPath": "website-redirect-stack",
+      "workingDirectory": "stacks\\website-redirect-stack",
+      "synthesizedStackPath": "stacks\\website-redirect-stack\\cdk.tf.json",
+      "annotations": [],
+      "dependencies": []
+    }
+  }
+}
