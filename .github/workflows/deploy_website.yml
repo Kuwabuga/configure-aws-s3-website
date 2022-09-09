@@ -1,4 +1,4 @@
-name: Deploy Infrastructure
+name: Deploy Website Infrastructure
 
 on:
   workflow_call:
@@ -27,18 +27,17 @@ on:
         type: string
         required: true
 
-env:
-  INFRASTRUCTURE_DIRECTORY: "./src"
-  AWS_REGION: ${{ inputs.AWS_REGION }}
-  ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
-  SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
-  SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
-  DOMAIN: ${{ inputs.DOMAIN }}
-
 jobs:
   deploy:
     name: Deploy Terraform
     runs-on: ubuntu-latest
+    env:
+      INFRASTRUCTURE_DIRECTORY: "./src"
+      AWS_REGION: ${{ inputs.AWS_REGION }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
+      SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
+      DOMAIN: ${{ inputs.DOMAIN }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
