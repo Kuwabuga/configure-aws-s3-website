@@ -1,5 +1,5 @@
 {
-  "name": "infrastructure",
+  "name": "configure-aws-s3-website",
   "version": "1.0.0",
   "main": "main.js",
   "types": "main.ts",
