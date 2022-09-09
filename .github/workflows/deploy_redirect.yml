@@ -2,32 +2,34 @@ name: Deploy Website Redirect Infrastructure
 
 on:
   workflow_call:
-    inputs:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
       AWS_REGION:
-        description: ""
-        type: string
-        required: false
-        default: eu-west-1
+        required: true
+    inputs:
       ENVIRONMENT:
-        description: ""
+        description: application environment (production, preprod, qa, development)
         type: string
         required: false
         default: development
       SERVICE_NAME:
-        description: ""
+        description: service name calling this workflow
         type: string
         required: true
       SUBDOMAIN:
-        description: ""
+        description: website subdomain
         type: string
         required: false
         default: ""
       DOMAIN:
-        description: ""
+        description: webite domain
         type: string
         required: true
       REDIRECT:
-        description: ""
+        description: website to redirect to
         type: string
         required: true
 
@@ -35,14 +37,6 @@ jobs:
   deploy:
     name: Deploy Terraform
     runs-on: ubuntu-latest
-    env:
-      INFRASTRUCTURE_DIRECTORY: "./src"
-      AWS_REGION: ${{ inputs.AWS_REGION }}
-      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
-      SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
-      SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
-      DOMAIN: ${{ inputs.DOMAIN }}
-      REDIRECT: ${{ inputs.REDIRECT }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -61,5 +55,11 @@ jobs:
           aws-region:  ${{ env.AWS_REGION }}
 
       - name: Deploy with Terraform CDK
-        working-directory: ${{ env.INFRASTRUCTURE_DIRECTORY }}
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+          SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
+          SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
+          DOMAIN: ${{ inputs.DOMAIN }}
+          REDIRECT: ${{ inputs.REDIRECT }}
         run: cdktf deploy website-redirect-stack --auto-approve

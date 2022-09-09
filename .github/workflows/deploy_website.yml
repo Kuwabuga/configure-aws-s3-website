@@ -2,28 +2,30 @@ name: Deploy Website Infrastructure
 
 on:
   workflow_call:
-    inputs:
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
       AWS_REGION:
-        description: ""
-        type: string
-        required: false
-        default: eu-west-1
+        required: true
+    inputs:
       ENVIRONMENT:
-        description: ""
+        description: application environment (production, preprod, qa, development)
         type: string
         required: false
         default: development
       SERVICE_NAME:
-        description: ""
+        description: service name calling this workflow
         type: string
         required: true
       SUBDOMAIN:
-        description: ""
+        description: website subdomain
         type: string
         required: false
         default: ""
       DOMAIN:
-        description: ""
+        description: webite domain
         type: string
         required: true
 
@@ -31,13 +33,6 @@ jobs:
   deploy:
     name: Deploy Terraform
     runs-on: ubuntu-latest
-    env:
-      INFRASTRUCTURE_DIRECTORY: "./src"
-      AWS_REGION: ${{ inputs.AWS_REGION }}
-      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
-      SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
-      SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
-      DOMAIN: ${{ inputs.DOMAIN }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -53,8 +48,13 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:  ${{ env.AWS_REGION }}
+          aws-region:  ${{ secrets.AWS_REGION }}
 
       - name: Deploy with Terraform CDK
-        working-directory: ${{ env.INFRASTRUCTURE_DIRECTORY }}
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+          SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
+          SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
+          DOMAIN: ${{ inputs.DOMAIN }}
         run: cdktf deploy website-stack --auto-approve
