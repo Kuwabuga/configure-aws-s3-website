@@ -15,4 +15,4 @@ export const DOMAIN = process.env.DOMAIN;
 export const REDIRECT = process.env.REDIRECT;
 
 export const IS_PRODUCTION = ENVIRONMENT === "production";
-export const BUCKET_NAME = process.env.SUBDOMAN !== "" ? `${SUBDOMAIN}.${DOMAIN}` : DOMAIN;
+export const BUCKET_NAME = process.env.SUBDOMAIN || process.env.SUBDOMAN !== "" ? `${SUBDOMAIN}.${DOMAIN}` : DOMAIN;
