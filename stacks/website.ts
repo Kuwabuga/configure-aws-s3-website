@@ -1,11 +1,11 @@
 import { Construct } from "constructs";
 import { TerraformStack } from "cdktf";
-import { buildS3Backend } from "@/lib/backends";
-import { buildAWSProvider } from "@/lib/providers";
-import { createHostedZoneRecord, getHostedZone } from "@/lib/route53";
-import { getHostedZoneCertificate } from "@/lib/acm";
-import { buildWebsiteCloudfrontDistribution, buildCloudfrontOAI } from "@/lib/cloudfront";
-import { buildS3Bucket, setS3BucketPolicy, setS3BucketBlockPublicAccess } from "@/lib/s3";
+import { buildS3Backend } from "../lib/backends";
+import { buildAWSProvider } from "../lib/providers";
+import { createHostedZoneRecord, getHostedZone } from "../lib/route53";
+import { getHostedZoneCertificate } from "../lib/acm";
+import { buildWebsiteCloudfrontDistribution, buildCloudfrontOAI } from "../lib/cloudfront";
+import { buildS3Bucket, setS3BucketPolicy, setS3BucketBlockPublicAccess } from "../lib/s3";
 
 export class WebsiteStack extends TerraformStack {
   constructor(scope: Construct, name: string) {
