@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { App, TerraformStack } from "cdktf";
+import { TerraformStack } from "cdktf";
 import { buildS3Backend } from "@/lib/backends";
 import { buildAWSProvider } from "@/lib/providers";
 import { createHostedZoneRecord, getHostedZone } from "@/lib/route53";
@@ -11,7 +11,7 @@ export class WebsiteStack extends TerraformStack {
   constructor(scope: Construct, name: string) {
     super(scope, name);
 
-    buildS3Backend(this);
+    buildS3Backend(this, "s3-website");
     buildAWSProvider(this);
 
     const administrativeRegionProvider = buildAWSProvider(this, "us-east-1");
@@ -27,7 +27,3 @@ export class WebsiteStack extends TerraformStack {
     createHostedZoneRecord(this, domainHostedZone, websiteDistribution);
   }
 }
-
-const app = new App();
-new WebsiteStack(app, "website-stack");
-app.synth();
