@@ -21,6 +21,11 @@ on:
         description: service name calling this workflow
         type: string
         required: true
+      TERRAFORM_STATE_FILE_NAME:
+        description: name of .tf file to be saved in the Terraform bucket
+        type: string
+        required: false
+        default: s3-website-redirect-state
       SUBDOMAIN:
         description: website subdomain
         type: string
@@ -72,6 +77,7 @@ jobs:
           AWS_TERRAFORM_BUCKET: ${{ secrets.AWS_TERRAFORM_BUCKET }}
           ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
           SERVICE_NAME: ${{ inputs.SERVICE_NAME }}
+          TERRAFORM_STATE_FILE_NAME: ${{ inputs.TERRAFORM_STATE_FILE_NAME }}
           SUBDOMAIN: ${{ inputs.SUBDOMAIN }}
           DOMAIN: ${{ inputs.DOMAIN }}
           REDIRECT: ${{ inputs.REDIRECT }}
