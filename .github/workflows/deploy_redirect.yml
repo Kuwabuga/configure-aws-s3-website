@@ -39,13 +39,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          repository: kuwabuga/configure-aws-s3-website
+          path: "configure-aws-s3-website"
 
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Install Terraform CDK
-        run: npm install --global cdktf-cli@0.12.2
+      - name: Install Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -54,7 +56,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region:  ${{ env.AWS_REGION }}
 
+      - name: Install dependencies
+        working-directory: configure-aws-s3-website
+        run: npm install
+      
+      - name: Install Terraform CDK
+        run: npm install --global cdktf-cli@0.12.2
+
       - name: Deploy with Terraform CDK
+        working-directory: configure-aws-s3-website
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
           ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
